@@ -3,45 +3,24 @@ package com.example.mybooksapplication
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.mybooksapplication.data.BookRepository
+import com.example.mybooksapplication.data.local.AppDatabase
 import com.example.mybooksapplication.ui.theme.MyBooksApplicationTheme
+import com.example.mybooksapplication.ui.viewmodel.BookViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        // 依存関係の初期化 (実務ではHiltで行う部分)
+        val database = AppDatabase.getDatabase(applicationContext)
+        val repository = BookRepository(database.bookDao())
+        val viewModelFactory = BookViewModelFactory(repository)
+
         setContent {
             MyBooksApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MyBooksApp(viewModelFactory = viewModelFactory)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyBooksApplicationTheme {
-        Greeting("Android")
     }
 }
