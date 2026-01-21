@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">My Books Application</string>
+    <string name="books_top_bar_title">書籍管理</string>
+    <string name="books_empty">本がありません。右下の＋ボタンで追加してください。</string>
+    <string name="scan_camera_permission">カメラ権限が必要です</string>
+    <string name="scan_not_found">書籍が見つかりませんでした</string>
+    <string name="scan_communication_error">通信エラー: %1$s</string>
+
 </resources>
