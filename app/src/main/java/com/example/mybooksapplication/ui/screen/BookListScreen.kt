@@ -120,7 +120,7 @@ fun BookList(
                     AsyncImage(
                         model = book.coverUrl,
                         contentDescription = null,
-                        modifier = Modifier.size(50.dp),
+                        modifier = Modifier.size(75.dp),
                         placeholder = painterResource(R.drawable.ic_launcher_foreground), // 仮の画像
                         error = painterResource(R.drawable.ic_launcher_foreground) // 実際には「No Image」画像を用意して指定
                     )

@@ -140,7 +140,7 @@ fun ScanSuccessContent(
         AsyncImage(
             model = state.book.coverUrl,
             contentDescription = null,
-            modifier = Modifier.size(100.dp)
+            modifier = Modifier.size(120.dp)
         )
         Text(state.book.title, style = MaterialTheme.typography.titleMedium)
         Text(state.book.author)
