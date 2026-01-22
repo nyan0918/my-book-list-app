@@ -4,9 +4,12 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mybooksapplication.R
-import com.example.mybooksapplication.data.BookRepository
 import com.example.mybooksapplication.data.local.BookEntity
 import com.example.mybooksapplication.data.remote.BookSummary
+import com.example.mybooksapplication.domain.usecase.DeleteBookUseCase
+import com.example.mybooksapplication.domain.usecase.GetSavedBooksUseCase
+import com.example.mybooksapplication.domain.usecase.SaveBookUseCase
+import com.example.mybooksapplication.domain.usecase.SearchBookByIsbnUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,10 +28,15 @@ sealed interface ScanUiState {
 }
 
 @HiltViewModel
-class BookViewModel @Inject constructor(private val repository: BookRepository) : ViewModel() {
+class BookViewModel @Inject constructor(
+    getSavedBooksUseCase: GetSavedBooksUseCase,
+    private val searchBookByIsbnUseCase: SearchBookByIsbnUseCase,
+    private val saveBookUseCase: SaveBookUseCase,
+    private val deleteBookUseCase: DeleteBookUseCase
+) : ViewModel() {
 
     // 保存済みリスト（FlowをStateFlowに変換）
-    val savedBooks: StateFlow<List<BookEntity>> = repository.allBooks
+    val savedBooks: StateFlow<List<BookEntity>> = getSavedBooksUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // スキャン結果の状態管理
@@ -46,7 +54,7 @@ class BookViewModel @Inject constructor(private val repository: BookRepository) 
             _scanState.value = ScanUiState.Loading // ここでLoadingになるので、以降のスキャンは↑で弾かれる
 
             try {
-                val result = repository.fetchBookInfo(isbn)
+                val result = searchBookByIsbnUseCase(isbn)
                 if (result != null) {
                     _scanState.value = ScanUiState.Success(result)
                 } else {
@@ -63,22 +71,14 @@ class BookViewModel @Inject constructor(private val repository: BookRepository) 
         val state = _scanState.value
         if (state is ScanUiState.Success) {
             viewModelScope.launch {
-                val b = state.book
-                repository.saveBook(
-                    BookEntity(
-                        isbn = b.isbn,
-                        title = b.title,
-                        author = b.author,
-                        coverUrl = b.coverUrl
-                    )
-                )
+                saveBookUseCase(state.book)
                 resetScanState()
             }
         }
     }
 
     fun deleteBook(book: BookEntity) {
-        viewModelScope.launch { repository.deleteBook(book) }
+        viewModelScope.launch { deleteBookUseCase(book) }
     }
 
     fun resetScanState() {
