@@ -1,23 +1,22 @@
 package com.example.mybooksapplication
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mybooksapplication.ui.screen.BookListScreen
 import com.example.mybooksapplication.ui.screen.ScanScreen
 import com.example.mybooksapplication.ui.viewmodel.BookViewModel
-import com.example.mybooksapplication.ui.viewmodel.BookViewModelFactory
 
 @Composable
-fun MyBooksApp(viewModelFactory: BookViewModelFactory) {
+fun MyBooksApp() {
     val navController = rememberNavController()
-    val viewModel: BookViewModel = viewModel(factory = viewModelFactory)
 
     NavHost(navController = navController, startDestination = "books") {
         // 書籍リスト画面
         composable("books") {
+            val viewModel: BookViewModel = hiltViewModel()
             BookListScreen(
                 viewModel = viewModel,
                 onFabClick = { navController.navigate("scan") }
@@ -25,6 +24,7 @@ fun MyBooksApp(viewModelFactory: BookViewModelFactory) {
         }
         // スキャン画面
         composable("scan") {
+            val viewModel: BookViewModel = hiltViewModel()
             ScanScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() }

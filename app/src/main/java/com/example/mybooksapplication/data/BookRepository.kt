@@ -3,11 +3,12 @@ package com.example.mybooksapplication.data
 import android.util.Log
 import com.example.mybooksapplication.data.local.BookDao
 import com.example.mybooksapplication.data.local.BookEntity
-import com.example.mybooksapplication.data.remote.ApiClient
 import com.example.mybooksapplication.data.remote.BookSummary
+import com.example.mybooksapplication.data.remote.GoogleBooksService
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class BookRepository(private val bookDao: BookDao) {
+class BookRepository @Inject constructor(private val bookDao: BookDao,private val service: GoogleBooksService) {
 
     // 保存済み書籍リストのFlow
     val allBooks: Flow<List<BookEntity>> = bookDao.getAllBooks()
@@ -16,7 +17,7 @@ class BookRepository(private val bookDao: BookDao) {
         Log.d(TAG, "isbn: $isbn")
         return try {
             // ISBNで検索クエリを作成 ("isbn:978xxxx")
-            val response = ApiClient.service.searchBook("isbn:$isbn")
+            val response = service.searchBook("isbn:$isbn")
 
             // 最初の1件を取得
             val item = response.items?.firstOrNull() ?: return null

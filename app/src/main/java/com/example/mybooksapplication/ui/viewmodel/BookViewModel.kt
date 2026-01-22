@@ -2,18 +2,19 @@ package com.example.mybooksapplication.ui.viewmodel
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.mybooksapplication.R
 import com.example.mybooksapplication.data.BookRepository
 import com.example.mybooksapplication.data.local.BookEntity
 import com.example.mybooksapplication.data.remote.BookSummary
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // UI状態
 sealed interface ScanUiState {
@@ -23,7 +24,8 @@ sealed interface ScanUiState {
     data class Error(@param:StringRes val message: Int) : ScanUiState
 }
 
-class BookViewModel(private val repository: BookRepository) : ViewModel() {
+@HiltViewModel
+class BookViewModel @Inject constructor(private val repository: BookRepository) : ViewModel() {
 
     // 保存済みリスト（FlowをStateFlowに変換）
     val savedBooks: StateFlow<List<BookEntity>> = repository.allBooks
@@ -81,16 +83,5 @@ class BookViewModel(private val repository: BookRepository) : ViewModel() {
 
     fun resetScanState() {
         _scanState.value = ScanUiState.Idle
-    }
-}
-
-// ViewModelを生成するためのFactory（手動DI用）
-class BookViewModelFactory(private val repository: BookRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BookViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return BookViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
