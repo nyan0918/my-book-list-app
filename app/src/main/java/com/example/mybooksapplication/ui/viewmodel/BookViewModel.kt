@@ -152,14 +152,6 @@ class BookViewModel @Inject constructor(
     }
 
     /**
-     * 一括モード用バッファをクリアする.
-     */
-    fun clearBuffer() {
-        Log.d(TAG, "[clearBuffer]")
-        _scannedBuffer.value = emptyList()
-    }
-
-    /**
      * 選択の切り替え.
      */
     fun toggleSelection(bookId: Int) {
@@ -201,6 +193,11 @@ class BookViewModel @Inject constructor(
      */
     fun getBookDetail(id: Int): Flow<BookEntity?> {
         return getBookDetailUseCase(id)
+    }
+
+    private fun clearBuffer() {
+        Log.d(TAG, "[clearBuffer]")
+        _scannedBuffer.value = emptyList()
     }
 
     companion object {
