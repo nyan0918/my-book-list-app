@@ -1,6 +1,5 @@
 package com.example.mybooksapplication.data.local
 
-import android.content.Context
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +16,9 @@ data class BookEntity(
 interface BookDao {
     @Query("SELECT * FROM books ORDER BY id DESC")
     fun getAllBooks(): Flow<List<BookEntity>>
+
+    @Query("SELECT * FROM books WHERE id = :id LIMIT 1")
+    fun getBookById(id: Int): Flow<BookEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(book: BookEntity)

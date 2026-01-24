@@ -50,7 +50,8 @@ import com.example.mybooksapplication.ui.viewmodel.BookViewModel
 @Composable
 fun BookListScreen(
     viewModel: BookViewModel,
-    onFabClick: () -> Unit
+    onFabClick: () -> Unit,
+    onBookClick: (Int) -> Unit
 ) {
     val books by viewModel.savedBooks.collectAsState()
     val selectedIds by viewModel.selectedBookIds.collectAsState()
@@ -83,7 +84,8 @@ fun BookListScreen(
                 books = books,
                 selectedIds = selectedIds,
                 isSelectionMode = isSelectionMode,
-                onToggleSelection = { id -> viewModel.toggleSelection(id) }
+                onToggleSelection = { id -> viewModel.toggleSelection(id) },
+                onItemClick = onBookClick
             )
         }
 
@@ -140,7 +142,8 @@ private fun BookListContent(
     books: List<BookEntity>,
     selectedIds: Set<Int>,
     isSelectionMode: Boolean,
-    onToggleSelection: (Int) -> Unit
+    onToggleSelection: (Int) -> Unit,
+    onItemClick: (Int) -> Unit
 ) {
     LazyColumn(contentPadding = padding) {
         items(books, key = { it.id }) { book ->
@@ -154,7 +157,7 @@ private fun BookListContent(
                     if (isSelectionMode) {
                         onToggleSelection(book.id)
                     } else {
-                        // TODO 通常時のクリック処理（詳細画面へ遷移など）
+                        onItemClick(book.id)
                     }
                 },
                 onLongClick = { onToggleSelection(book.id) }

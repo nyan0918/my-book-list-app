@@ -44,6 +44,8 @@ class BookRepository @Inject constructor(
         }
     }
 
+    fun getBookById(id: Int) = bookDao.getBookById(id)
+
     suspend fun saveBook(book: BookEntity) = bookDao.insertBook(book)
 
     suspend fun saveBooks(books: List<BookEntity>) = bookDao.insertAll(books)

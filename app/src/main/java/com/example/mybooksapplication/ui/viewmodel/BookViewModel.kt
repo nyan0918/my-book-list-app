@@ -9,11 +9,13 @@ import com.example.mybooksapplication.data.local.BookEntity
 import com.example.mybooksapplication.data.remote.BookSummary
 import com.example.mybooksapplication.domain.usecase.DeleteBookUseCase
 import com.example.mybooksapplication.domain.usecase.DeleteMultipleBooksUseCase
+import com.example.mybooksapplication.domain.usecase.GetBookDetailUseCase
 import com.example.mybooksapplication.domain.usecase.GetSavedBooksUseCase
 import com.example.mybooksapplication.domain.usecase.SaveBookUseCase
 import com.example.mybooksapplication.domain.usecase.SaveMultipleBooksUseCase
 import com.example.mybooksapplication.domain.usecase.SearchBookByIsbnUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -36,7 +38,8 @@ class BookViewModel @Inject constructor(
     private val saveBookUseCase: SaveBookUseCase,
     private val deleteBookUseCase: DeleteBookUseCase,
     private val saveMultipleBooksUseCase: SaveMultipleBooksUseCase,
-    private val deleteMultipleBooksUseCase: DeleteMultipleBooksUseCase
+    private val deleteMultipleBooksUseCase: DeleteMultipleBooksUseCase,
+    private val getBookDetailUseCase: GetBookDetailUseCase
 ) : ViewModel() {
 
     val savedBooks: StateFlow<List<BookEntity>> = getSavedBooksUseCase()
@@ -193,6 +196,12 @@ class BookViewModel @Inject constructor(
         _selectedBookIds.value = emptySet()
     }
 
+    /**
+     * 書籍詳細を取得する.
+     */
+    fun getBookDetail(id: Int): Flow<BookEntity?> {
+        return getBookDetailUseCase(id)
+    }
 
     companion object {
         private val TAG = BookViewModel::class.java.simpleName
