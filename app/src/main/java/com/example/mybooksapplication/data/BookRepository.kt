@@ -1,6 +1,7 @@
 package com.example.mybooksapplication.data
 
 import android.util.Log
+import com.example.mybooksapplication.BuildConfig
 import com.example.mybooksapplication.data.local.BookDao
 import com.example.mybooksapplication.data.local.BookEntity
 import com.example.mybooksapplication.data.remote.BookSummary
@@ -8,7 +9,10 @@ import com.example.mybooksapplication.data.remote.GoogleBooksService
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class BookRepository @Inject constructor(private val bookDao: BookDao,private val service: GoogleBooksService) {
+class BookRepository @Inject constructor(
+    private val bookDao: BookDao,
+    private val service: GoogleBooksService
+) {
 
     // 保存済み書籍リストのFlow
     val allBooks: Flow<List<BookEntity>> = bookDao.getAllBooks()
@@ -16,8 +20,7 @@ class BookRepository @Inject constructor(private val bookDao: BookDao,private va
     suspend fun fetchBookInfo(isbn: String): BookSummary? {
         Log.d(TAG, "isbn: $isbn")
         return try {
-            // ISBNで検索クエリを作成 ("isbn:978xxxx")
-            val response = service.searchBook("isbn:$isbn")
+            val response = service.searchBook("isbn:$isbn", BuildConfig.BOOKS_API_KEY)
 
             // 最初の1件を取得
             val item = response.items?.firstOrNull() ?: return null
@@ -45,6 +48,6 @@ class BookRepository @Inject constructor(private val bookDao: BookDao,private va
     suspend fun deleteBook(book: BookEntity) = bookDao.deleteBook(book)
 
     companion object {
-        private val TAG = this::class.java.simpleName
+        private val TAG = BookRepository::class.java.simpleName
     }
 }
