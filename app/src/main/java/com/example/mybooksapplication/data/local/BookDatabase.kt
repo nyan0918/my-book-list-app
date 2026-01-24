@@ -23,20 +23,15 @@ interface BookDao {
 
     @Delete
     suspend fun deleteBook(book: BookEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(books: List<BookEntity>)
+
+    @Delete
+    suspend fun deleteBooks(books: List<BookEntity>)
 }
 
 @Database(entities = [BookEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun bookDao(): BookDao
-
-    companion object {
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                Room.databaseBuilder(context.applicationContext, AppDatabase::class.java, "book_db")
-                    .build().also { INSTANCE = it }
-            }
-        }
-    }
 }

@@ -45,7 +45,12 @@ class BookRepository @Inject constructor(
     }
 
     suspend fun saveBook(book: BookEntity) = bookDao.insertBook(book)
+
+    suspend fun saveBooks(books: List<BookEntity>) = bookDao.insertAll(books)
+
     suspend fun deleteBook(book: BookEntity) = bookDao.deleteBook(book)
+
+    suspend fun deleteBooks(books: List<BookEntity>) = bookDao.deleteBooks(books)
 
     companion object {
         private val TAG = BookRepository::class.java.simpleName
