@@ -84,10 +84,8 @@ class BookViewModel @Inject constructor(
                 val result = searchBookByIsbnUseCase(isbn)
                 if (result != null) {
                     _scannedBuffer.value += result
-                    _scanState.value = ScanUiState.Idle
-                } else {
-                    _scanState.value = ScanUiState.Idle
                 }
+                _scanState.value = ScanUiState.Idle
 
             } else {
                 // ===========================

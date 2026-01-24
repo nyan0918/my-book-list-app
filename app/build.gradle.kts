@@ -33,6 +33,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -106,4 +109,74 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    // Test dependencies
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("app.cash.turbine:turbine:0.12.3")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    // 単体テストタスクに依存させる（テスト実行 -> レポート作成の流れを作る）
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)   // CIツール用
+        html.required.set(true)  // ブラウザ確認用
+    }
+
+    // 【重要】カバレッジ計測から除外するファイル（Kotlin/Android特有の生成ファイル）
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        // DataBinding / ViewBinding
+        "**/databinding/*",
+        "**/generated/callback/*",
+        "**/*Binding.class",
+        "**/*BindingImpl.class",
+        // Dagger / Hilt (DIを使っている場合)
+        "**/Dagger*.*",
+        "**/*_Factory.*",
+        "**/*_MembersInjector.*",
+        "**/*_HiltModules*.*",
+        // Kotlinの生成クラス対策
+        "**/*\$Lambda$*.*", // ラムダ式
+        "**/*\$inlined$*.*" // インライン関数
+    )
+
+    // コンパイルされたクラスファイルの場所
+    // Kotlinのクラスファイルは "tmp/kotlin-classes/debug" に出力されることが多いです
+    val debugTree = fileTree(
+        mapOf(
+            "dir" to layout.buildDirectory.dir("tmp/kotlin-classes/debug").get().asFile,
+            "excludes" to fileFilter
+        )
+    )
+    val javaDebugTree = fileTree(
+        mapOf(
+            "dir" to layout.buildDirectory.dir("intermediates/javac/debug/classes").get().asFile,
+            "excludes" to fileFilter
+        )
+    )
+
+    // ソースコードの場所
+    val mainSrc = layout.projectDirectory.dir("src/main/java").asFile
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree, javaDebugTree))
+
+    // テスト実行結果データ(.exec)の場所
+    executionData.setFrom(
+        fileTree(
+            mapOf(
+                "dir" to layout.buildDirectory.asFile,
+                "includes" to listOf("**/*.exec", "**/*.ec")
+            )
+        )
+    )
 }
