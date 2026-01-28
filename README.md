@@ -17,7 +17,7 @@
 - データ層: Repository（`BookRepository`）、Room（`BookDao`）、外部APIクライアント（`GoogleBooksService`）
 
 <details>
-<summary>もっと見る</summary>
+<summary>もっと見る(クリック)</summary>
 
 ## 動作要件
 
