@@ -1,6 +1,6 @@
 # 書籍管理アプリ
 
-このリポジトリは、所有する書籍を管理するための Android アプリケーションです。ISBN のスキャンや手動入力で書籍情報を取得し、ローカルデータベースに保存・一覧表示・詳細確認・削除ができます。外部 API（Google Books API）から書誌情報とカバー画像を取得して表示します。
+所有する書籍を管理するための Android アプリケーションです。ISBN のスキャンで書籍情報を取得し、ローカルデータベースに保存・一覧表示・詳細確認・削除ができます。外部 API（Google Books API）から書誌情報とカバー画像を取得して表示します。
 
 ## 主な機能
 
@@ -11,10 +11,15 @@
 
 ## アーキテクチャ概要
 
-- UI 層: Activity・JetpackCompose
-- ViewModel 層: UI 状態管理（`BookViewModel`）
-- ドメイン層: UseCase（検索、保存、削除、詳細取得 など）
-- データ層: Repository（`BookRepository`）、Room（`BookDao`）、外部APIクライアント（`GoogleBooksService`）
+- **UI 層** : Activity・JetpackCompose
+- **ViewModel 層** : UI 状態管理（`BookViewModel`）
+- **ドメイン層** : UseCase（検索、保存、削除、詳細取得 など）
+- **データ層** : Repository（`BookRepository`）、Room（`BookDao`）、外部APIクライアント（`GoogleBooksService`）
+
+## 主たるソースコード
+
+1. [MainActivity](app/src/main/java/com/example/mybooksapplication/MainActivity.kt)：アプリのエントリポイント
+2. [MyBooksApp](app/src/main/java/com/example/mybooksapplication/MyBooksApp.kt)；各画面の遷移などの管理
 
 <details>
 <summary>もっと見る(クリック)</summary>
@@ -39,7 +44,7 @@
 .\gradlew :app:testDebugUnitTest --no-daemon
 ```
 
-- Jacoco カバレッジレポート（プロジェクトに設定がある場合）:
+- Jacoco カバレッジレポート（プロジェクトに設定がある場合）:  
 
 ```powershell
 .\gradlew :app:jacocoTestReport
