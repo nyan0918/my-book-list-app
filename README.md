@@ -21,15 +21,15 @@
 1. [MainActivity](app/src/main/java/com/example/mybooksapplication/MainActivity.kt)：アプリのエントリポイント。ナビゲーションホストの起動と権限処理を担当します。
 2. [MyBooksApp](app/src/main/java/com/example/mybooksapplication/MyBooksApp.kt)：Composeを使った画面遷移とルートUIを定義します。
 3. Screen
-   * [BookDetailScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/BookDetailScreen.kt)
-   * [BookListScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/BookListScreen.kt)
-   * [ScanScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/ScanScreen.kt)
+   * [BookListScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/BookListScreen.kt)：書籍一覧画面
+   * [ScanScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/ScanScreen.kt)：バーコードスキャン画面
+   * [BookDetailScreen](app/src/main/java/com/example/mybooksapplication/ui/screen/BookDetailScreen.kt)：書籍詳細画面
 4. [BookViewModel](app/src/main/java/com/example/mybooksapplication/ui/viewmodel/BookViewModel.kt)：検索・保存・削除など UI に必要な状態とイベントを管理する ViewModel。
 5. [BookRepository](app/src/main/java/com/example/mybooksapplication/data/BookRepository.kt)：データ取得の窓口。Room と Google Books API の間を仲介します。
 6. [BookDao](app/src/main/java/com/example/mybooksapplication/data/local/BookDatabase.kt)：Room の DAO。エンティティの CRUD とクエリを提供します。永続化用エンティティの定義をします。
 7. [GoogleBooksService](app/src/main/java/com/example/mybooksapplication/data/remote/GoogleBooksApi.kt)：Retrofit インターフェース。外部 API から書誌情報とカバー画像の URL を取得します。
-8. [GoogleBooksDto](app/src/main/java/com/example/mybooksapplication/data/remote/GoogleBooksDto.kt):
-9. [di](app/src/main/java/com/example/mybooksapplication/di/AppModule.kt)：依存注入の設定（Repository、Retrofit、Room、ViewModel のバインド）。
+8. [GoogleBooksDto](app/src/main/java/com/example/mybooksapplication/data/remote/GoogleBooksDto.kt):データオブジェクト
+9. [di](app/src/main/java/com/example/mybooksapplication/di/AppModule.kt)：依存注入の設定（Retrofit、Room のバインド）。
 
 <details>
 <summary>もっと見る(クリック)</summary>
