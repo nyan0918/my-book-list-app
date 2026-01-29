@@ -8,8 +8,8 @@
 - 検索結果の確認後、ローカルデータベース（Room）へ保存
 - 保存済み書籍の一覧表示、詳細表示
 - 複数選択による一括削除
-  
-![demo](https://github.com/nyan0918/my-book-list-app/blob/main/GIF_20260129_233610_684.gif)
+
+<img src="/GIF_20260129_233610_684.gif" width="350">
 
 ## アーキテクチャ概要
 
