@@ -19,6 +19,12 @@
 
 <img src="/gif/GIF_20260129_233610_684.gif" width="350">
 
+## 開発の目的
+- Android推奨アーキテクチャに則ったアプリ開発の総復習
+- 実務経験が無い未経験技術を独学による実装
+   - Web API通信の実装：retroifit（Android向けのHTTPクライアントライブラリ）を使用
+   - ローカルデータベースの実装：Room（AndroidでSQLiteを簡単に使用するライブラリ）を使用
+
 ## アーキテクチャ概要
 
 - **UI 層** : Activity・JetpackCompose
